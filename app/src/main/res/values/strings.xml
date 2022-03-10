@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">미미클</string>
+
+    <string name="default_notification_channel_id" translatable="false">fcm_mimicle_channel</string>
+</resources>

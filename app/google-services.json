@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "52983828510",
+    "project_id": "mimicle-1258d",
+    "storage_bucket": "mimicle-1258d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:52983828510:android:1243f3f95d6fbc90279e0f",
+        "android_client_info": {
+          "package_name": "app.com.mimicle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "52983828510-7bj92h2kos4spun1nj1bri718jibdb0i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEuCGLkd3dVLQtLdHUGd-kSfxccFTJw64"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "52983828510-7bj92h2kos4spun1nj1bri718jibdb0i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
