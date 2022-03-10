@@ -16,7 +16,6 @@ android {
         versionCode 8
         versionName "1.0.5"
         multiDexEnabled true
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
