@@ -2,13 +2,16 @@ package app.com.mimicle.activity
 
 import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.media.MediaPlayer
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.util.Base64
 import android.util.Log
-import android.widget.TextView
-import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import app.com.mimicle.BuildConfig
 import app.com.mimicle.MimicleAppApplication.Companion.TAG
@@ -23,6 +26,10 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,11 +37,14 @@ import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
 import java.lang.Exception
+import java.security.MessageDigest
 
 
 class SplashActivity : AppCompatActivity() {
     private var adid: String? = null
+    private var coroutineScope = CoroutineScope(Dispatchers.Main)
 
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
@@ -42,6 +52,27 @@ class SplashActivity : AppCompatActivity() {
         getAppMeta()
         //checkPermission()
         getAdid()
+        coroutineScope.launch(Dispatchers.Main){
+            delay(400)
+            playSound()
+        }
+        //키해시 얻기
+//        try {
+//            val packageInfo = packageManager.getPackageInfo(
+//                packageName, PackageManager.GET_SIGNING_CERTIFICATES
+//            )
+//            val signingInfo = packageInfo.signingInfo.apkContentsSigners
+//
+//            for (signature in signingInfo) {
+//                val messageDigest = MessageDigest.getInstance("SHA")
+//                messageDigest.update(signature.toByteArray())
+//                val keyHash = String(Base64.encode(messageDigest.digest(), 0))
+//                Log.d("KeyHash", keyHash)
+//            }
+//
+//        } catch (e: Exception) {
+//            Log.e("Exception", e.toString())
+//        }
     }
 
     private fun checkIntent() {
@@ -74,6 +105,7 @@ class SplashActivity : AppCompatActivity() {
         }).execute()
     }
 
+    //앱 정보 가져오기
     private fun getAppMeta() {
         val osType = "aos"
         val versionCode = BuildConfig.VERSION_CODE.toString()
@@ -118,6 +150,7 @@ class SplashActivity : AppCompatActivity() {
         })
     }
 
+    //서버에 토큰 정보 전송
     private fun setPushInfo(token: String) {
         val osType = "aos"
         val versionCode = BuildConfig.VERSION_CODE.toString()
@@ -198,6 +231,15 @@ class SplashActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
         }).start()
+    }
+
+    //미믹 사운드 플레이
+    fun playSound() {
+        var resId = getResources().getIdentifier(R.raw.mimic.toString(),
+            "raw", this@SplashActivity?.packageName)
+
+        val mediaPlayer = MediaPlayer.create(this@SplashActivity, resId)
+        mediaPlayer.start()
     }
 }
 
