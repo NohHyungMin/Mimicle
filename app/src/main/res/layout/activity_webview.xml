@@ -1,26 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_web_viewer"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="app.com.mimicle.activity.WebViewerActivity">
-    <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent" android:id="@+id/webview_frame">
-        <WebView
-            android:id="@+id/web_content"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/activity_web_viewer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="app.com.mimicle.ui.webview.WebViewerActivity">
+
+        <FrameLayout
+            android:id="@+id/webview_frame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></WebView>
-    </FrameLayout>
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-<!--    <Button-->
-<!--        android:id="@+id/light_text"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        ></Button>-->
-<!--    <Button-->
-<!--        android:id="@+id/click"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        ></Button>-->
+            <WebView
+                android:id="@+id/web_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></WebView>
+        </FrameLayout>
 
-</RelativeLayout>
+    <!--    <Button-->
+    <!--        android:id="@+id/light_text"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        ></Button>-->
+    <!--    <Button-->
+    <!--        android:id="@+id/click"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        ></Button>-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

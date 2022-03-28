@@ -37,7 +37,7 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
         <activity
-            android:name=".activity.SplashActivity"
+            android:name=".ui.splash.SplashActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:exported="true">
             <intent-filter>
@@ -46,7 +46,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="app.com.mimicle.activity.WebViewerActivity"
+        <activity android:name="app.com.mimicle.ui.webview.WebViewerActivity"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustUnspecified"
             >

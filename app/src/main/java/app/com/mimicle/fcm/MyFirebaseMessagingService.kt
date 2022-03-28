@@ -3,13 +3,10 @@ package app.com.mimicle.fcm
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.AudioAttributes
-import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
@@ -17,11 +14,9 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
-import app.com.mimicle.BuildConfig
-import app.com.mimicle.MimicleAppApplication
 import app.com.mimicle.R
-import app.com.mimicle.activity.SplashActivity
-import app.com.mimicle.model.PushModel
+import app.com.mimicle.ui.splash.SplashActivity
+import app.com.mimicle.data.push.PushModel
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import java.net.URL
