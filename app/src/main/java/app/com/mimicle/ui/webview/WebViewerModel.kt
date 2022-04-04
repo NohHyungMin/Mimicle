@@ -1,16 +1,17 @@
 package app.com.mimicle.ui.webview
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import app.com.mimicle.data.push.PushInfo
 import app.com.mimicle.data.push.PushRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class WebViewerModel(private val pushRepository: PushRepository)  : ViewModel(){
+@HiltViewModel
+class WebViewerModel @Inject constructor(
+    private val pushRepository: PushRepository)  : ViewModel(){
     private val _pushInfo = MutableLiveData<PushInfo>()
     val pushInfo: LiveData<PushInfo>
         get() = _pushInfo

@@ -28,9 +28,6 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import app.com.mimicle.BuildConfig
 import app.com.mimicle.R
 import app.com.mimicle.common.storage.AppPreference
@@ -41,11 +38,12 @@ import app.com.mimicle.webinterface.WebAppInterface
 import java.net.URISyntaxException
 import java.util.*
 import androidx.lifecycle.Observer
-import app.com.mimicle.MimicleAppApplication
-import app.com.mimicle.data.push.PushRepositoryImpl
-import app.com.mimicle.data.splash.AppMetaRepositoryImpl
+import app.com.mimicle.base.BaseActivity
+import app.com.mimicle.databinding.ActivityWebviewBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-class WebViewerActivity : AppCompatActivity(), SensorEventListener {
+@AndroidEntryPoint
+class WebViewerActivity : BaseActivity<ActivityWebviewBinding>(R.layout.activity_webview), SensorEventListener {
     private var web_content: WebView? = null
     private var click: Button? = null
     private var light_text: TextView? = null
@@ -62,20 +60,20 @@ class WebViewerActivity : AppCompatActivity(), SensorEventListener {
     lateinit var mContainer : FrameLayout
 
     private lateinit var pushRepository: PushRepository
-    private val viewModel: WebViewerModel by viewModels {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return WebViewerModel(pushRepository) as T
-            }
-        }
-    }
+    private val viewModel: WebViewerModel by viewModels()
+//    {
+//        object : ViewModelProvider.Factory {
+//            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+//                return WebViewerModel(pushRepository) as T
+//            }
+//        }
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_webview)
         mContext = baseContext
+        binding.vm = viewModel
 
-        inject()
         initViewModelCallback()
 
         mLoadingDialog = LoadingDialog(this)
@@ -92,10 +90,6 @@ class WebViewerActivity : AppCompatActivity(), SensorEventListener {
 //        light_text = findViewById<TextView>(R.id.click)
         
         setLightSensor()
-    }
-
-    private fun inject(){
-        pushRepository = PushRepositoryImpl(MimicleAppApplication.apiInterface)
     }
 
     private fun initViewModelCallback() {
@@ -200,13 +194,14 @@ class WebViewerActivity : AppCompatActivity(), SensorEventListener {
 //        web_content!!.loadUrl("https://www.mimicle.kr/alpha/welcome.html?memberIdx=" + PrefHelper.getPrefValue(PrefHelper.USER_IDX))
 //        web_content!!.loadUrl("file:///android_asset/signup/signup.html")
         //web_content!!.loadUrl("https://app.mimicle.kr/interface.html")
-        if(AppPreference.getLandingUrl() == null || AppPreference.getLandingUrl().equals("")) {
-            web_content!!.loadUrl(AppPreference.getMainUrl()!!)
+        if(AppPreference(baseContext).getLandingUrl() == null || AppPreference(baseContext).getLandingUrl().equals("")) {
+            web_content!!.loadUrl(AppPreference(baseContext).getMainUrl()!!)
+            Log.d("nhm", AppPreference(baseContext).getMainUrl()?:"");
             //web_content!!.loadUrl("https://app.mimicle.kr/sample/sns_test.html")
 
         }else{
-            web_content!!.loadUrl(AppPreference.getLandingUrl()!!)
-            AppPreference.setLandingUrl("")
+            web_content!!.loadUrl(AppPreference(baseContext).getLandingUrl()!!)
+            AppPreference(baseContext).setLandingUrl("")
         }
 //        web_content!!.loadUrl("file:///android_asset/main.html")
 
@@ -508,14 +503,14 @@ class WebViewerActivity : AppCompatActivity(), SensorEventListener {
         val osType = "aos"
         val versionCode = BuildConfig.VERSION_CODE.toString()
         var memno = ""
-        if(AppPreference.getMemNo() != null)
-            memno = AppPreference.getMemNo()!!//"1000001"
+        if(AppPreference(baseContext).getMemNo() != null)
+            memno = AppPreference(baseContext).getMemNo()!!//"1000001"
         var pushkey = ""
-        if(AppPreference.getPushToken() != null)
-            pushkey = AppPreference.getPushToken()!!
+        if(AppPreference(baseContext).getPushToken() != null)
+            pushkey = AppPreference(baseContext).getPushToken()!!
         var uuid = ""
-        if(AppPreference.getAdid() != null)
-            uuid = AppPreference.getAdid()!!
+        if(AppPreference(baseContext).getAdid() != null)
+            uuid = AppPreference(baseContext).getAdid()!!
 
         var param = HashMap<String, String>()
         param[" osType"] = osType

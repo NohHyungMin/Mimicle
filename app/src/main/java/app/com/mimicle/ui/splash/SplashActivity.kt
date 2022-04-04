@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -12,20 +11,16 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import app.com.mimicle.BuildConfig
-import app.com.mimicle.MimicleAppApplication.Companion.TAG
 import androidx.lifecycle.Observer
-import app.com.mimicle.MimicleAppApplication
 import app.com.mimicle.R
+import app.com.mimicle.base.BaseActivity
 import app.com.mimicle.common.storage.AppPreference
 import app.com.mimicle.data.push.PushInfo
 import app.com.mimicle.data.push.PushRepository
-import app.com.mimicle.data.push.PushRepositoryImpl
 import app.com.mimicle.data.splash.AppMetaData
 import app.com.mimicle.data.splash.AppMetaRepository
-import app.com.mimicle.data.splash.AppMetaRepositoryImpl
+import app.com.mimicle.databinding.ActivitySplashBinding
 import app.com.mimicle.ui.webview.WebViewerActivity
 import app.com.mimicle.util.GoogleUtil
 import app.com.mimicle.util.MapUtils
@@ -33,6 +28,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.*
 import kotlinx.coroutines.delay
@@ -42,27 +38,28 @@ import java.util.*
 import kotlin.collections.ArrayList
 import java.lang.Exception
 
-
-class SplashActivity : AppCompatActivity() {
+@AndroidEntryPoint
+class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_splash) {
     private lateinit var adid: String
     private var coroutineScope = CoroutineScope(Dispatchers.Main)
 
     private lateinit var pushRepository: PushRepository
     private lateinit var appMetaRepository: AppMetaRepository
-    private val viewModel: SplashViewModel by viewModels {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return SplashViewModel(pushRepository, appMetaRepository) as T
-            }
-        }
-    }
+    private val viewModel: SplashViewModel by viewModels()
+//    {
+//        object : ViewModelProvider.Factory {
+//            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+//                return SplashViewModel(pushRepository, appMetaRepository) as T
+//            }
+//        }
+//    }
+
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash)
+        binding.vm = viewModel
 
-        inject()
         initViewModelCallback()
 
         checkIntent()
@@ -92,10 +89,6 @@ class SplashActivity : AppCompatActivity() {
 //        }
     }
 
-    private fun inject(){
-        pushRepository = PushRepositoryImpl(MimicleAppApplication.apiInterface)
-        appMetaRepository= AppMetaRepositoryImpl(MimicleAppApplication.apiInterface)
-    }
 
     private fun initViewModelCallback() {
         val versionCode = BuildConfig.VERSION_CODE.toString()
@@ -106,7 +99,7 @@ class SplashActivity : AppCompatActivity() {
             })
             appMetaData.observe(this@SplashActivity, Observer {
                 var appMeta: AppMetaData = it
-                AppPreference.setMainUrl(appMeta.data.mainurl.toString())
+                AppPreference(baseContext).setMainUrl(appMeta.data.mainurl.toString())
                 if(appMeta.data.vcode.toInt() > versionCode.toInt()){
                     if(appMeta.data.forcedyn.uppercase() == "Y"){
                         val builder = AlertDialog.Builder(this@SplashActivity)
@@ -145,7 +138,7 @@ class SplashActivity : AppCompatActivity() {
         if (intent != null) {
             callUrl = intent.getStringExtra("url")
             if(callUrl != null) {
-                AppPreference.setLandingUrl(callUrl)
+                AppPreference(baseContext).setLandingUrl(callUrl)
                 //Toast.makeText(baseContext, callUrl, Toast.LENGTH_LONG).show()
             }
         }
@@ -157,7 +150,7 @@ class SplashActivity : AppCompatActivity() {
                 if (result != null) {
                     adid = result
                     if(adid != null)
-                        AppPreference.setAdid(adid!!)
+                        AppPreference(baseContext).setAdid(adid!!)
                 }
                 myToken()
             }
@@ -225,8 +218,8 @@ class SplashActivity : AppCompatActivity() {
         val osType = "aos"
         val versionCode = BuildConfig.VERSION_CODE.toString()
         var memno = ""
-        if(AppPreference.getMemNo() != null)
-            memno = AppPreference.getMemNo()!!//"1000001"
+        if(AppPreference(baseContext).getMemNo() != null)
+            memno = AppPreference(baseContext).getMemNo()!!//"1000001"
         var pushkey = ""
         if(token != null)
             pushkey = token!!
@@ -294,12 +287,11 @@ class SplashActivity : AppCompatActivity() {
             try {
                 FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
                     if(!task.isSuccessful){
-                        Log.w(TAG, "Fetching FCM registration token failed", task.exception)
                         return@OnCompleteListener
                     }
                     val token = task.result.toString()
                     if(token != null)
-                        AppPreference.setPushToken(token)
+                        AppPreference(baseContext).setPushToken(token)
 //                    Toast.makeText(baseContext, msg, Toast.LENGTH_LONG).show()
                     FirebaseMessaging.getInstance().subscribeToTopic("all");
                     setPushInfo(token)

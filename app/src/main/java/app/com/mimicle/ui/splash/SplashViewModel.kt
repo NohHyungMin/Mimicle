@@ -1,19 +1,20 @@
 package app.com.mimicle.ui.splash
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import app.com.mimicle.data.push.PushInfo
 import app.com.mimicle.data.push.PushRepository
 import app.com.mimicle.data.splash.AppMetaData
 import app.com.mimicle.data.splash.AppMetaRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class SplashViewModel(private val pushRepository: PushRepository,
-                      private val appMetaRepository: AppMetaRepository) : ViewModel(){
+@HiltViewModel
+class SplashViewModel @Inject constructor(
+    private val pushRepository: PushRepository,
+    private val appMetaRepository: AppMetaRepository) : ViewModel(){
 
     private val _pushInfo = MutableLiveData<PushInfo>()
     val pushInfo: LiveData<PushInfo>

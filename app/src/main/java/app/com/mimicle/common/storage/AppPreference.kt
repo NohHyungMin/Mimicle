@@ -1,11 +1,12 @@
 package app.com.mimicle.common.storage
 
+import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
-import app.com.mimicle.MimicleAppApplication
 
-object AppPreference {
-    private val preference: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(MimicleAppApplication.instance.context)
+class AppPreference(context: Context) {
+    private val preference: SharedPreferences =
+        PreferenceManager.getDefaultSharedPreferences(context)
 
     private val MAIN_URL = "mainurl"
     private val MEM_NO = "memno"

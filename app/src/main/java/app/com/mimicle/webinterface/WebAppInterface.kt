@@ -2,13 +2,9 @@ package app.com.mimicle.webinterface
 
 import android.app.Activity
 import android.content.Intent
-import android.util.Log
 import android.webkit.JavascriptInterface
 import android.widget.Toast
-import app.com.mimicle.BuildConfig
-import app.com.mimicle.api.ApiClient
 import app.com.mimicle.common.storage.AppPreference
-import app.com.mimicle.data.push.PushInfo
 import app.com.mimicle.ui.webview.WebViewerActivity
 import retrofit2.Call
 import retrofit2.Callback
@@ -30,23 +26,23 @@ class WebAppInterface(private val mContext: Activity) {
     //알림 설정
     @JavascriptInterface
     fun getNoti() {
-        AppPreference.getNotiType()
+        AppPreference(mContext).getNotiType()
     }
 
     @JavascriptInterface
     fun saveNoti(idxNoti: String) {
-        AppPreference.setNotiType(idxNoti)
+        AppPreference(mContext).setNotiType(idxNoti)
     }
 
     //회원번호
     @JavascriptInterface
     fun getMemno() {
-        AppPreference.getMemNo()
+        AppPreference(mContext).getMemNo()
     }
 
     @JavascriptInterface
     fun setMemno(memNo: String) {
-        AppPreference.setMemNo(memNo)
+        AppPreference(mContext).setMemNo(memNo)
         (mContext as WebViewerActivity).setPushInfo()
     }
 

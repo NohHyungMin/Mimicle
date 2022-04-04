@@ -2,7 +2,10 @@ package app.com.mimicle.api
 
 import app.com.mimicle.data.push.PushInfo
 import app.com.mimicle.data.splash.AppMetaData
-import retrofit2.Response
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 
 interface ApiInterface {
@@ -33,4 +36,23 @@ interface ApiInterface {
         @Field("uuid") uuid : String?,
         @Field("memno") memNo : String
     ) : PushInfo
+
+    companion object {
+        private const val BASE_URL = "https://app.mimicle.kr/"
+
+        fun create(): ApiInterface {
+            val logger = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC }
+
+            val client = OkHttpClient.Builder()
+                .addInterceptor(logger)
+                .build()
+
+            return Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(ApiInterface::class.java)
+        }
+    }
 }
