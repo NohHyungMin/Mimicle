@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -63,8 +64,8 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
         initViewModelCallback()
 
         checkIntent()
-        getAppMeta()
-        //checkPermission()
+        //getAppMeta()
+        checkPermission()
         getAdid()
         coroutineScope.launch(Dispatchers.Main){
             delay(400)
@@ -96,6 +97,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
             pushInfo.observe(this@SplashActivity, Observer {
                 var pushInfo: PushInfo = it
                 Log.d("test", pushInfo.memno.toString())
+                //Toast.makeText(baseContext, pushInfo.result, Toast.LENGTH_SHORT).show()
             })
             appMetaData.observe(this@SplashActivity, Observer {
                 var appMeta: AppMetaData = it
@@ -168,7 +170,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
         val versionCode = BuildConfig.VERSION_CODE.toString()
 
         var param = HashMap<String, String>()
-        param[" osType"] = osType
+        param["osType"] = osType
         param["versionCode"] = versionCode
         viewModel.getAppMeta(param)
 
@@ -227,7 +229,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
         if(adid != null)
             uuid = adid!!
         var param = HashMap<String, String>()
-        param[" osType"] = osType
+        param["osType"] = osType
         param["versionCode"] = versionCode
         param["pushkey"] = pushkey
         param["uuid"] = uuid
@@ -261,14 +263,12 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
 
         TedPermission.with(this)
             .setPermissionListener(permissionListener)
-            .setRationaleMessage("앱을 이용하기 위해서는 접근 권한이 필요합니다")
-            .setDeniedMessage("앱에서 요구하는 권한설정이 필요합니다...\n [설정] > [권한] 에서 사용으로 활성화해주세요.")
             .setPermissions(
 //                    Manifest.permission.READ_PHONE_STATE,
 //                    Manifest.permission.READ_CALL_LOG,  // 안드로이드 9.0 에서는 이것도 추가하라고 되어 있음.
-//                    Manifest.permission.CALL_PHONE,  // 전화걸기 및 관리
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,  // 전화걸기 및 관리
+                //Manifest.permission.ACCESS_FINE_LOCATION,
+                //Manifest.permission.ACCESS_COARSE_LOCATION
             ).check()
     }
 

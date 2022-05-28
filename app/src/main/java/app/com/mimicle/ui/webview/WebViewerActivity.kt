@@ -3,6 +3,7 @@ package app.com.mimicle.ui.webview
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
+import android.app.DownloadManager
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
@@ -19,6 +20,7 @@ import android.hardware.SensorManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.os.Message
 import android.util.Log
 import android.view.KeyEvent
@@ -27,6 +29,7 @@ import android.webkit.*
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import app.com.mimicle.BuildConfig
 import app.com.mimicle.R
@@ -152,6 +155,23 @@ class WebViewerActivity : BaseActivity<ActivityWebviewBinding>(R.layout.activity
 //        webSettings.setGeolocationDatabasePath(filesDir.path)
         webSettings.loadsImagesAutomatically = true
 
+        // 다운로드 처리
+        web_content?.setDownloadListener(DownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
+            val request = DownloadManager.Request(Uri.parse(url))
+            val filename = URLUtil.guessFileName(url, contentDisposition, mimetype)
+            val cookies = CookieManager.getInstance().getCookie(url)
+            request.addRequestHeader("cookie", cookies)
+            request.addRequestHeader("User-Agent", userAgent)
+            request.setDescription("Downloading file..")
+            request.setTitle(filename)
+            request.allowScanningByMediaScanner()
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename)
+            val dManager = mContext?.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+            dManager.enqueue(request)
+            Toast.makeText(baseContext, "파일을 다운로드합니다.", Toast.LENGTH_SHORT).show()
+        })
+
         web_content!!.scrollBarStyle = WebView.SCROLLBARS_OUTSIDE_OVERLAY
         web_content!!.isScrollbarFadingEnabled = true
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O) {
@@ -195,9 +215,11 @@ class WebViewerActivity : BaseActivity<ActivityWebviewBinding>(R.layout.activity
 //        web_content!!.loadUrl("file:///android_asset/signup/signup.html")
         //web_content!!.loadUrl("https://app.mimicle.kr/interface.html")
         if(AppPreference(baseContext).getLandingUrl() == null || AppPreference(baseContext).getLandingUrl().equals("")) {
-            web_content!!.loadUrl(AppPreference(baseContext).getMainUrl()!!)
+            val versionCode = BuildConfig.VERSION_CODE.toString()
+            web_content!!.loadUrl(AppPreference(baseContext).getMainUrl()!! + "?ostype=aos&vcode=" + versionCode)
             Log.d("nhm", AppPreference(baseContext).getMainUrl()?:"");
-            //web_content!!.loadUrl("https://app.mimicle.kr/sample/sns_test.html")
+
+            //web_content!!.loadUrl("https://app.mimicle.kr/sample/pdf_test.php?ostype=aos&vcode=" + versionCode)
 
         }else{
             web_content!!.loadUrl(AppPreference(baseContext).getLandingUrl()!!)
@@ -326,7 +348,24 @@ class WebViewerActivity : BaseActivity<ActivityWebviewBinding>(R.layout.activity
             //Log.e("url", "스키마reqes" + request.getUrl().toString());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 var url = request?.url.toString()
-                if (request?.url?.scheme == "intent") {
+                if(url.lowercase().endsWith(".jpg") || url.lowercase().endsWith(".png") ) {
+                    val request = DownloadManager.Request(Uri.parse(url))
+                    request.allowScanningByMediaScanner()
+                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                    val filename = url.split("/")
+                    //val filename = URLUtil.guessFileName(url, contentDisposition, mimetype)
+                    val cookies = CookieManager.getInstance().getCookie(url)
+                    //request.addRequestHeader("cookie", cookies)
+                    //request.addRequestHeader("User-Agent", userAgent)
+                    //request.setDescription("Downloading file..")
+                    //request.setTitle(filename)
+                    //request.allowScanningByMediaScanner()
+                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename[filename.size-1])
+                    val dManager = mContext?.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+                    dManager.enqueue(request)
+                    Toast.makeText(baseContext, "파일을 다운로드합니다.", Toast.LENGTH_SHORT).show()
+                }else if (request?.url?.scheme == "intent") {
                     try {
                         Log.d("TAG scheme", intent.getPackage().toString())
                         val intent = Intent.parseUri(request.url.toString(), Intent.URI_INTENT_SCHEME)
@@ -513,7 +552,7 @@ class WebViewerActivity : BaseActivity<ActivityWebviewBinding>(R.layout.activity
             uuid = AppPreference(baseContext).getAdid()!!
 
         var param = HashMap<String, String>()
-        param[" osType"] = osType
+        param["osType"] = osType
         param["versionCode"] = versionCode
         param["pushkey"] = pushkey
         param["uuid"] = uuid
