@@ -9,6 +9,6 @@ class PushRepositoryImpl @Inject constructor(private val apiInterface: ApiInterf
     override suspend fun setPushInfo(
         param: HashMap<String, String>
     ) = apiInterface.setPushInfo(
-        param["osType"] ?:"", param["versionCode"] ?:"",
-        param["pushKey"] ?:"", param["uuid"], param["memNo"] ?:"")
+        param["osType"]!!, param["versionCode"]!!,
+        param["pushkey"]!!, param["uuid"]!!, param["memno"]!!)
 }

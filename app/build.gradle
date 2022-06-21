@@ -15,8 +15,8 @@ android {
         applicationId "app.com.mimicle"
         minSdk 16
         targetSdk 30
-        versionCode 14
-        versionName "1.0.9"
+        versionCode 15
+        versionName "1.0.10"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

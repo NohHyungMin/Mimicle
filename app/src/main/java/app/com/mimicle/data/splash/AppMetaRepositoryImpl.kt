@@ -9,6 +9,6 @@ class AppMetaRepositoryImpl @Inject constructor(private val apiInterface: ApiInt
     AppMetaRepository {
     override suspend fun getMeta(
         param: HashMap<String, String>
-    ) = apiInterface.getMeta(param["osType"] ?:"", param["versionCode"] ?:"")
+    ) = apiInterface.getMeta(param["osType"]!!, param["versionCode"]!!)
 
 }

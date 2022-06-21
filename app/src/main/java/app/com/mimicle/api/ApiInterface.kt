@@ -33,7 +33,7 @@ interface ApiInterface {
         @Field("ostype") osType : String,
         @Field("vcode") versionCode : String,
         @Field("pushkey") pushKey : String,
-        @Field("uuid") uuid : String?,
+        @Field("uuid") uuid : String,
         @Field("memno") memNo : String
     ) : PushInfo
 
