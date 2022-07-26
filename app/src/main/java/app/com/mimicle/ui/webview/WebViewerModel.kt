@@ -1,8 +1,10 @@
 package app.com.mimicle.ui.webview
 
 import androidx.lifecycle.*
+import app.com.mimicle.MimicleApplication
 import app.com.mimicle.data.push.PushInfo
 import app.com.mimicle.data.push.PushRepository
+import app.com.mimicle.util.MapUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,10 +19,12 @@ class WebViewerModel @Inject constructor(
         get() = _pushInfo
 
     fun setPushInfo(param: HashMap<String, String>) = viewModelScope.launch(Dispatchers.IO){
-        val responseData = pushRepository.setPushInfo(param)
+        if(MapUtils.checkNetworkState(MimicleApplication.ApplicationContext())) {
+            val responseData = pushRepository.setPushInfo(param)
 
-        withContext(Dispatchers.Main) {
-            _pushInfo.value = responseData
+            withContext(Dispatchers.Main) {
+                _pushInfo.value = responseData
+            }
         }
     }
 }

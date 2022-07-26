@@ -1,10 +1,13 @@
 package app.com.mimicle.ui.splash
 
 import androidx.lifecycle.*
+import app.com.mimicle.MimicleApplication
 import app.com.mimicle.data.push.PushInfo
 import app.com.mimicle.data.push.PushRepository
 import app.com.mimicle.data.splash.AppMetaData
 import app.com.mimicle.data.splash.AppMetaRepository
+import app.com.mimicle.util.MapUtils
+import app.com.mimicle.util.MapUtils.checkNetworkState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,18 +28,22 @@ class SplashViewModel @Inject constructor(
         get() = _appMetaData
 
     fun setPushInfo(param: HashMap<String, String>) = viewModelScope.launch(Dispatchers.IO){
-        val responseData = pushRepository.setPushInfo(param)
+        if(MapUtils.checkNetworkState(MimicleApplication.ApplicationContext())) {
+            val responseData = pushRepository.setPushInfo(param)
 
-        withContext(Dispatchers.Main) {
-            _pushInfo.value = responseData
+            withContext(Dispatchers.Main) {
+                _pushInfo.value = responseData
+            }
         }
     }
 
     fun getAppMeta(param: HashMap<String, String>) = viewModelScope.launch(Dispatchers.IO){
-        val responseData = appMetaRepository.getMeta(param)
+        if(MapUtils.checkNetworkState(MimicleApplication.ApplicationContext())) {
+            val responseData = appMetaRepository.getMeta(param)
 
-        withContext(Dispatchers.Main) {
-            _appMetaData.value = responseData
+            withContext(Dispatchers.Main) {
+                _appMetaData.value = responseData
+            }
         }
     }
 }
