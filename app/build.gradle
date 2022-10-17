@@ -15,8 +15,8 @@ android {
         applicationId "app.com.mimicle"
         minSdk 16
         targetSdk 30
-        versionCode 16
-        versionName "1.0.11"
+        versionCode 17
+        versionName "1.0.12"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -77,4 +77,5 @@ dependencies {
 
     implementation 'com.google.android.gms:play-services-maps:17.0.1'
     implementation 'gun0912.ted:tedpermission:2.2.0'
+    implementation "com.github.skydoves:sandwich:1.2.4"
 }

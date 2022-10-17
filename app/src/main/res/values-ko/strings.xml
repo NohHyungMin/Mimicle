@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">미미클</string>
+    <string name="str_loading">로딩중.</string>
+    <string name="str_exit">종료하시겠습니까?</string>
+    <string name="str_check_netword">네트워크 연결 상태를 확인해주세요.</string>
 
     <string name="default_notification_channel_id" translatable="false">fcm_mimicle_channel</string>
 

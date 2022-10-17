@@ -98,8 +98,19 @@ class WebViewerActivity : BaseActivity<ActivityWebviewBinding>(R.layout.activity
     private fun initViewModelCallback() {
         with(viewModel) {
             pushInfo.observe(this@WebViewerActivity, Observer {
-                var pushInfo: PushInfo = it
-                Log.d("test", pushInfo.memno.toString())
+                var pushInfo: PushInfo? = it
+                //Log.d("test", pushInfo?.memno.toString())
+            })
+            networkError.observe(this@WebViewerActivity, Observer {it ->
+                if(it == true) {
+//                    val builder = androidx.appcompat.app.AlertDialog.Builder(this@WebViewerActivity)
+//                    builder.setTitle("")
+//                    builder.setMessage("network error")
+//                    builder.setPositiveButton(android.R.string.yes) { dialog, which ->
+//                        finish()
+//                    }
+//                    builder.show()
+                }
             })
         }
     }
@@ -504,7 +515,7 @@ class WebViewerActivity : BaseActivity<ActivityWebviewBinding>(R.layout.activity
             } else {
                 val builder = androidx.appcompat.app.AlertDialog.Builder(this@WebViewerActivity)
                 builder.setTitle("")
-                builder.setMessage("종료하시겠습니까?")
+                builder.setMessage(R.string.str_exit)
                 builder.setPositiveButton(android.R.string.yes) { dialog, which ->
                     finish()
                 }

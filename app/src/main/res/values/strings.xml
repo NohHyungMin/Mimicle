@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Mimicle</string>
+    <string name="str_loading">loading.</string>
+    <string name="str_exit">Exit?</string>
+    <string name="str_check_netword">Please check your network connection.</string>
 
     <string name="default_notification_channel_id" translatable="false">fcm_mimicle_channel</string>
 
@@ -7,5 +10,4 @@
     <string name="facebook_app_id">1012540969670531</string>
     <string name="fb_login_protocol_scheme">fb1012540969670531</string>
     <string name="facebook_client_token">1fc5906db3da81498555f14005527447</string>
-
 </resources>

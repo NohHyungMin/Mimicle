@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.webkit.JavascriptInterface
 import android.widget.Toast
+import app.com.mimicle.R
 import app.com.mimicle.common.storage.AppPreference
 import app.com.mimicle.ui.webview.WebViewerActivity
 import retrofit2.Call
@@ -50,7 +51,7 @@ class WebAppInterface(private val mContext: Activity) {
     fun goExitPop() {
         val builder = androidx.appcompat.app.AlertDialog.Builder(mContext)
         builder.setTitle("")
-        builder.setMessage("종료하시겠습니까?")
+        builder.setMessage(R.string.str_exit)
         builder.setPositiveButton(android.R.string.yes) { dialog, which ->
             mContext.finish()
         }
