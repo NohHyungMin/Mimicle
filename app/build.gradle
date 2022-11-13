@@ -13,10 +13,10 @@ android {
 
     defaultConfig {
         applicationId "app.com.mimicle"
-        minSdk 16
+        minSdk 21
         targetSdk 30
-        versionCode 17
-        versionName "1.0.12"
+        versionCode 18
+        versionName "1.0.13"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
