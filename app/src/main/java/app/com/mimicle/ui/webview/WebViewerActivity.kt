@@ -138,11 +138,13 @@ class WebViewerActivity : BaseActivity<ActivityWebviewBinding>(R.layout.activity
     override fun onResume() {
         super.onResume()
         sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL)
+        web_content?.loadUrl("javascript:callBackground()")
     }
 
     override fun onPause() {
         super.onPause()
         sensorManager.unregisterListener(this)
+        web_content?.loadUrl("javascript:callApp()")
     }
 
     override fun onDestroy() {
@@ -382,7 +384,7 @@ class WebViewerActivity : BaseActivity<ActivityWebviewBinding>(R.layout.activity
         override fun onLoadResource(view: WebView?, url: String?) {
             // TODO Auto-generated method stub
             super.onLoadResource(view, url)
-            web_content!!.loadUrl("javascript:test()")
+            web_content?.loadUrl("javascript:test()")
         }
 
         override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
